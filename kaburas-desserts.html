@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kabura's Desserts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================
+   CSS VARIABLES & RESET
+========================================= */
+:root {
+  --burgundy:      #6B1A2A;
+  --burgundy-deep: #4A0F1C;
+  --burgundy-soft: #8B2D3F;
+  --gold:          #C9956C;
+  --gold-light:    #E8C4A0;
+  --cream:         #F5EDE3;
+  --off-white:     #FAF6F1;
+  --charcoal:      #1A1A1A;
+  --dark:          #0D0D0D;
+  --muted:         rgba(245,237,227,0.55);
+
+  --shadow-hero:  0 32px 80px rgba(107,26,42,0.45);
+  --shadow-card:  0 8px 32px rgba(0,0,0,0.28);
+  --shadow-glow:  0 0 40px rgba(107,26,42,0.3);
+  --radius-lg:    18px;
+  --radius-xl:    28px;
+  --transition:   0.38s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--dark);
+  color: var(--cream);
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a  { text-decoration: none; color: inherit; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--burgundy); border-radius: 3px; }
+
+/* =========================================
+   GRAIN OVERLAY
+========================================= */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* =========================================
+   NAV
+========================================= */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 6%;
+  height: 72px;
+  background: rgba(13,13,13,0.82);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,149,108,0.15);
+  transition: all var(--transition);
+}
+nav.scrolled {
+  height: 64px;
+  border-bottom-color: rgba(201,149,108,0.25);
+  background: rgba(10,10,10,0.95);
+}
+
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-logo .logo-mark {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.nav-logo span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; font-weight: 600; letter-spacing: 0.02em;
+  color: var(--gold-light);
+}
+
+.nav-links {
+  display: flex; align-items: center; gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream); opacity: 0.6;
+  transition: opacity var(--transition), color var(--transition);
+}
+.nav-links a:hover { opacity: 1; color: var(--gold); }
+
+.nav-cta {
+  border: 1px solid var(--gold);
+  color: var(--gold) !important; opacity: 1 !important;
+  padding: 9px 22px; border-radius: 4px;
+  letter-spacing: 0.08em !important;
+  transition: all var(--transition) !important;
+}
+.nav-cta:hover {
+  background: var(--gold);
+  color: var(--dark) !important;
+}
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px;
+}
+.hamburger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--gold-light); border-radius: 2px;
+  transition: var(--transition);
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; position: fixed; top: 72px; left: 0; right: 0;
+  background: rgba(10,10,10,0.97);
+  backdrop-filter: blur(24px);
+  z-index: 998; padding: 28px 6%;
+  flex-direction: column; gap: 0;
+  border-bottom: 1px solid rgba(201,149,108,0.2);
+  animation: slideDown 0.28s ease;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--cream); opacity: 0.7;
+  padding: 16px 0; border-bottom: 1px solid rgba(201,149,108,0.1);
+  transition: opacity var(--transition), color var(--transition);
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:hover { opacity: 1; color: var(--gold); }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   HERO
+========================================= */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  position: relative; overflow: hidden;
+  padding: 0;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 40%, rgba(107,26,42,0.55) 0%, transparent 65%),
+              radial-gradient(ellipse at 10% 80%, rgba(74,15,28,0.4) 0%, transparent 55%),
+              var(--dark);
+}
+
+/* Decorative lines */
+.hero-bg::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(201,149,108,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,149,108,0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-inner {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 0;
+  width: 100%; min-height: 100vh;
+}
+
+.hero-text-col {
+  padding: 120px 6% 80px 8%;
+  animation: fadeInLeft 1s ease both;
+}
+
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block; width: 40px; height: 1px; background: var(--gold);
+}
+.hero-eyebrow span {
+  font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 5.5vw, 5rem);
+  line-height: 1.05; font-weight: 600;
+  color: var(--off-white);
+  margin-bottom: 28px;
+}
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1rem; line-height: 1.8;
+  color: var(--cream); opacity: 0.6;
+  max-width: 400px; margin-bottom: 44px;
+}
+
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--burgundy-soft), var(--burgundy-deep));
+  border: 1px solid var(--burgundy-soft);
+  color: var(--cream); padding: 15px 34px;
+  border-radius: 4px; font-size: 0.85rem; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  transition: all var(--transition);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-soft));
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(107,26,42,0.5);
+}
+
+.btn-outline {
+  border: 1px solid rgba(201,149,108,0.5);
+  color: var(--gold); padding: 14px 28px;
+  border-radius: 4px; font-size: 0.85rem; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  transition: all var(--transition);
+}
+.btn-outline:hover {
+  border-color: var(--gold);
+  background: rgba(201,149,108,0.08);
+}
+
+.hero-trust {
+  margin-top: 52px;
+  display: flex; gap: 40px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(201,149,108,0.12);
+}
+.trust-item strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 600; color: var(--gold);
+  line-height: 1;
+}
+.trust-item span {
+  font-size: 0.75rem; letter-spacing: 0.08em;
+  text-transform: uppercase; opacity: 0.5; margin-top: 4px;
+  display: block;
+}
+
+/* Hero image col */
+.hero-img-col {
+  position: relative; height: 100vh;
+  overflow: hidden;
+  animation: fadeIn 1.2s 0.3s ease both;
+}
+.hero-img-col img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.75) saturate(1.1);
+  transition: transform 10s ease;
+}
+.hero-img-col:hover img { transform: scale(1.04); }
+
+/* Overlay on image */
+.hero-img-col::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to right, var(--dark) 0%, transparent 30%),
+              linear-gradient(to top, var(--dark) 0%, transparent 40%);
+}
+
+/* floating card on image */
+.hero-card {
+  position: absolute; z-index: 2;
+  bottom: 52px; left: 10px;
+  background: rgba(20,10,12,0.88);
+  border: 1px solid rgba(201,149,108,0.3);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px;
+  animation: floatCard 6s ease-in-out infinite;
+}
+.hero-card .hc-icon { font-size: 28px; }
+.hero-card strong { display: block; font-size: 0.9rem; color: var(--gold-light); font-weight: 600; }
+.hero-card small  { font-size: 0.75rem; opacity: 0.5; }
+
+@keyframes floatCard {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================
+   DIVIDER
+========================================= */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0.25;
+  margin: 0;
+}
+
+/* =========================================
+   MARQUEE
+========================================= */
+.marquee-strip {
+  background: var(--burgundy-deep);
+  padding: 14px 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(201,149,108,0.2);
+  border-bottom: 1px solid rgba(201,149,108,0.2);
+}
+.marquee-inner {
+  display: flex; gap: 56px;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+.marquee-inner span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; font-weight: 500; font-style: italic;
+  color: var(--gold-light); opacity: 0.85;
+  display: flex; align-items: center; gap: 16px;
+  letter-spacing: 0.03em;
+}
+.marquee-inner span::after { content: '✦'; opacity: 0.4; font-size: 0.7em; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* =========================================
+   SECTION SHARED
+========================================= */
+section { padding: 100px 8%; position: relative; }
+
+.section-eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+}
+.section-eyebrow::before {
+  content: '';
+  display: block; width: 32px; height: 1px; background: var(--gold);
+}
+.section-eyebrow span {
+  font-size: 0.72rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold); font-weight: 500;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.1; font-weight: 600;
+  color: var(--off-white); margin-bottom: 16px;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+
+.section-sub {
+  font-size: 0.95rem; color: var(--cream); opacity: 0.55;
+  line-height: 1.8; max-width: 480px;
+}
+
+.section-header { margin-bottom: 60px; }
+.section-header.center { text-align: center; }
+.section-header.center .section-eyebrow { justify-content: center; }
+.section-header.center .section-eyebrow::before { display: none; }
+.section-header.center .section-eyebrow::after {
+  content: '';
+  display: block; width: 32px; height: 1px; background: var(--gold);
+}
+.section-header.center .section-sub { margin: 0 auto; }
+
+/* =========================================
+   SIGNATURE SECTION
+========================================= */
+.signature {
+  background: var(--charcoal);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; min-height: 580px;
+}
+.sig-img {
+  position: relative; overflow: hidden;
+}
+.sig-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.7) saturate(1.1);
+  transition: transform 0.8s ease;
+}
+.sig-img:hover img { transform: scale(1.05); }
+.sig-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 60%, var(--charcoal) 100%);
+}
+
+.sig-text {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 72px 8% 72px 6%;
+}
+.sig-text p {
+  font-size: 0.95rem; line-height: 1.9;
+  color: var(--cream); opacity: 0.6;
+  margin-bottom: 18px;
+}
+.sig-text .signature-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.2rem; color: var(--gold);
+  margin-top: 16px; opacity: 1;
+}
+
+.sig-pills {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 28px;
+}
+.pill {
+  border: 1px solid rgba(201,149,108,0.3);
+  color: var(--gold); border-radius: 50px;
+  padding: 7px 18px;
+  font-size: 0.78rem; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   PRODUCTS / MENU
+========================================= */
+.products-section { background: var(--dark); }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1300px; margin: 0 auto;
+}
+
+.product-card {
+  background: var(--charcoal);
+  border: 1px solid rgba(201,149,108,0.1);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition);
+  display: flex; flex-direction: column;
+  opacity: 0; transform: translateY(28px);
+}
+.product-card.visible {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.55s ease, transform 0.55s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.product-card:hover {
+  border-color: rgba(201,149,108,0.4);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+  transform: translateY(-6px) !important;
+}
+
+.card-img {
+  position: relative; overflow: hidden;
+  aspect-ratio: 4/3;
+}
+.card-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.85) saturate(1.15);
+  transition: transform 0.7s ease, filter 0.4s ease;
+}
+.product-card:hover .card-img img {
+  transform: scale(1.07);
+  filter: brightness(0.95) saturate(1.25);
+}
+
+.card-label {
+  position: absolute; top: 16px; left: 16px;
+  background: rgba(10,5,7,0.75);
+  border: 1px solid rgba(201,149,108,0.4);
+  backdrop-filter: blur(8px);
+  color: var(--gold); font-size: 0.68rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 4px;
+}
+.card-popular {
+  position: absolute; top: 16px; right: 16px;
+  background: var(--burgundy);
+  color: var(--cream); font-size: 0.68rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 4px;
+}
+
+.card-body {
+  padding: 24px; flex: 1; display: flex; flex-direction: column;
+}
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem; font-weight: 600;
+  color: var(--off-white); margin-bottom: 10px;
+}
+.card-desc {
+  font-size: 0.85rem; line-height: 1.7;
+  color: var(--cream); opacity: 0.5;
+  margin-bottom: 22px; flex: 1;
+}
+.card-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+}
+.card-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 600; color: var(--gold);
+}
+.card-price small {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem; color: var(--cream); opacity: 0.45;
+  display: block; margin-top: 1px; letter-spacing: 0.03em;
+}
+
+.btn-whatsapp {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #25D366;
+  color: white; padding: 11px 20px;
+  border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.03em; white-space: nowrap;
+}
+.btn-whatsapp:hover {
+  background: #1da853;
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+}
+.btn-whatsapp svg { width: 15px; height: 15px; fill: white; flex-shrink: 0; }
+
+/* Coming soon card */
+.card-coming {
+  background: transparent;
+  border: 1px dashed rgba(201,149,108,0.2);
+  border-radius: var(--radius-xl);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 48px 32px;
+  min-height: 380px;
+  opacity: 0; transform: translateY(28px);
+}
+.card-coming.visible {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.card-coming .coming-icon { font-size: 44px; margin-bottom: 20px; opacity: 0.5; }
+.card-coming h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; color: var(--gold); opacity: 0.6;
+  margin-bottom: 10px;
+}
+.card-coming p { font-size: 0.83rem; opacity: 0.35; line-height: 1.6; }
+
+/* =========================================
+   GALLERY
+========================================= */
+.gallery-section { background: var(--charcoal); }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 280px 280px;
+  gap: 14px;
+  max-width: 1300px; margin: 0 auto;
+}
+.gallery-item {
+  position: relative; overflow: hidden;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+.gallery-item.tall { grid-row: span 2; }
+.gallery-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.78) saturate(1.1);
+  transition: transform 0.6s ease, filter 0.4s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.07);
+  filter: brightness(0.95) saturate(1.3);
+}
+.gallery-overlay {
+  position: absolute; inset: 0;
+  background: rgba(107,26,42,0.55);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity var(--transition);
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span { font-size: 32px; }
+
+/* =========================================
+   REVIEWS
+========================================= */
+.reviews-section { background: var(--dark); }
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px; max-width: 1200px; margin: 0 auto;
+}
+.review-card {
+  background: var(--charcoal);
+  border: 1px solid rgba(201,149,108,0.1);
+  border-radius: var(--radius-lg); padding: 30px;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.review-card:hover {
+  border-color: rgba(201,149,108,0.3);
+  transform: translateY(-4px);
+}
+.review-stars { margin-bottom: 16px; font-size: 13px; letter-spacing: 2px; }
+.review-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.08rem; font-style: italic;
+  color: var(--cream); opacity: 0.8; line-height: 1.7;
+  margin-bottom: 22px;
+}
+.review-author { display: flex; align-items: center; gap: 14px; }
+.review-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--burgundy-deep), var(--burgundy-soft));
+  border: 1px solid rgba(201,149,108,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.review-author strong { font-size: 0.88rem; font-weight: 600; color: var(--off-white); display: block; }
+.review-author small  { font-size: 0.75rem; opacity: 0.4; letter-spacing: 0.04em; }
+
+/* =========================================
+   CONTACT
+========================================= */
+.contact-section {
+  background: var(--burgundy-deep);
+  position: relative; overflow: hidden;
+}
+.contact-section::before {
+  content: '';
+  position: absolute; top: -200px; right: -200px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(201,149,108,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.contact-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+  max-width: 1100px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+
+.contact-info { display: flex; flex-direction: column; gap: 20px; }
+.c-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,149,108,0.15);
+  border-radius: var(--radius-lg); padding: 22px 24px;
+  display: flex; align-items: flex-start; gap: 18px;
+  transition: border-color var(--transition), background var(--transition);
+}
+.c-card:hover {
+  background: rgba(201,149,108,0.06);
+  border-color: rgba(201,149,108,0.3);
+}
+.c-icon {
+  width: 46px; height: 46px; min-width: 46px;
+  background: rgba(107,26,42,0.6);
+  border: 1px solid rgba(201,149,108,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.c-card h4 {
+  font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold); font-weight: 500;
+  margin-bottom: 6px;
+}
+.c-card p { font-size: 0.9rem; line-height: 1.65; opacity: 0.75; }
+.c-card a { color: var(--gold-light); }
+
+.hours-table {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,149,108,0.15);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.hours-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 22px; border-bottom: 1px solid rgba(201,149,108,0.08);
+  transition: background var(--transition);
+}
+.hours-row:last-child { border-bottom: none; }
+.hours-row:hover { background: rgba(201,149,108,0.04); }
+.hours-row span:first-child { font-size: 0.85rem; opacity: 0.75; }
+.hours-row span:last-child  { font-size: 0.82rem; color: var(--gold-light); opacity: 0.75; }
+
+.contact-cta-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,149,108,0.2);
+  border-radius: var(--radius-xl);
+  padding: 52px 40px;
+  text-align: center;
+}
+.contact-cta-box .cta-icon { font-size: 52px; margin-bottom: 24px; }
+.contact-cta-box h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 600; color: var(--off-white);
+  margin-bottom: 14px;
+}
+.contact-cta-box p {
+  font-size: 0.9rem; opacity: 0.55; line-height: 1.7; margin-bottom: 32px;
+}
+.btn-wa-big {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: #25D366; color: white;
+  padding: 16px 36px; border-radius: 8px;
+  font-size: 0.9rem; font-weight: 600; letter-spacing: 0.04em;
+  transition: all var(--transition);
+  width: 100%; justify-content: center;
+}
+.btn-wa-big:hover {
+  background: #1da853;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(37,211,102,0.45);
+}
+.btn-wa-big svg { width: 20px; height: 20px; fill: white; }
+
+.delivery-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 16px;
+  background: rgba(37,211,102,0.1);
+  border: 1px solid rgba(37,211,102,0.25);
+  color: #4ade80; border-radius: 50px;
+  padding: 7px 18px; font-size: 0.78rem;
+  letter-spacing: 0.05em;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+footer {
+  background: #080508;
+  border-top: 1px solid rgba(201,149,108,0.1);
+  padding: 60px 8% 32px;
+}
+.footer-inner {
+  display: grid; grid-template-columns: 2fr 1fr 1fr;
+  gap: 52px; margin-bottom: 52px;
+  max-width: 1200px;
+}
+.footer-brand .logo-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+}
+.footer-brand .logo-row .lm {
+  width: 34px; height: 34px;
+  border: 1px solid var(--gold); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.footer-brand .logo-row span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; font-weight: 600; color: var(--gold-light);
+}
+.footer-brand p {
+  font-size: 0.86rem; line-height: 1.8; opacity: 0.45;
+  max-width: 270px; margin-bottom: 24px;
+}
+.social-row { display: flex; gap: 10px; }
+.soc-link {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(201,149,108,0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all var(--transition);
+}
+.soc-link:hover {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+  transform: translateY(-2px);
+}
+.footer-col h5 {
+  font-size: 0.7rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 22px; opacity: 0.8;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-col ul a { font-size: 0.85rem; opacity: 0.45; transition: opacity var(--transition), color var(--transition); }
+.footer-col ul a:hover { opacity: 1; color: var(--gold); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(201,149,108,0.08);
+  padding-top: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-size: 0.78rem; opacity: 0.3;
+}
+
+/* =========================================
+   FLOATING WHATSAPP
+========================================= */
+.float-wa {
+  position: fixed; bottom: 28px; right: 28px; z-index: 997;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: #25D366;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 28px rgba(37,211,102,0.55);
+  transition: all var(--transition);
+  animation: waPulse 2.8s ease-in-out infinite;
+}
+.float-wa:hover {
+  transform: scale(1.12);
+  box-shadow: 0 10px 40px rgba(37,211,102,0.7);
+}
+.float-wa svg { width: 28px; height: 28px; fill: white; }
+@keyframes waPulse {
+  0%,100% { box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+  50%      { box-shadow: 0 6px 52px rgba(37,211,102,0.8); }
+}
+
+/* Back to top */
+.back-top {
+  position: fixed; bottom: 100px; right: 28px; z-index: 997;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(201,149,108,0.3);
+  background: rgba(20,10,12,0.9);
+  border-radius: 8px; color: var(--gold);
+  font-size: 16px; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center;
+}
+.back-top.visible { opacity: 1; pointer-events: all; }
+.back-top:hover { background: var(--burgundy); border-color: var(--burgundy); }
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 960px) {
+  .hero-inner     { grid-template-columns: 1fr; }
+  .hero-text-col  { padding: 100px 6% 50px; }
+  .hero-img-col   { height: 50vh; min-height: 340px; }
+  .hero-img-col::before { background: linear-gradient(to top, var(--dark) 0%, transparent 50%); }
+  .hero-card      { left: 16px; bottom: 20px; }
+  .signature      { grid-template-columns: 1fr; }
+  .sig-img        { height: 300px; }
+  .gallery-grid   { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .gallery-item.tall { grid-row: span 1; }
+  .contact-inner  { grid-template-columns: 1fr; gap: 40px; }
+  .footer-inner   { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .nav-links      { display: none; }
+  .hamburger      { display: flex; }
+}
+@media (max-width: 600px) {
+  section         { padding: 72px 5%; }
+  .hero-title     { font-size: 2.5rem; }
+  .hero-trust     { gap: 24px; flex-wrap: wrap; }
+  .gallery-grid   { grid-template-columns: 1fr; }
+  .products-grid  { grid-template-columns: 1fr; }
+  .footer-inner   { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom  { justify-content: center; text-align: center; }
+  .hero-actions   { flex-direction: column; align-items: flex-start; }
+  .contact-cta-box { padding: 36px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="logo-mark">🌀</div>
+    <span>Kabura's Desserts</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://wa.me/254790811627?text=Thank+you+for+reaching+out,+I+will+be+with+you+shortly." target="_blank" class="nav-cta">Order Now</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home"    onclick="closeMobile()">Home</a>
+  <a href="#menu"    onclick="closeMobile()">Menu</a>
+  <a href="#gallery" onclick="closeMobile()">Gallery</a>
+  <a href="#reviews" onclick="closeMobile()">Reviews</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="https://wa.me/254790811627?text=Thank+you+for+reaching+out,+I+will+be+with+you+shortly." target="_blank">Order on WhatsApp</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-text-col">
+      <div class="hero-eyebrow">
+        <span>Handcrafted in Athi River</span>
+      </div>
+      <h1 class="hero-title">
+        The art of the<br><em>perfect roll,</em><br>made for you
+      </h1>
+      <p class="hero-sub">
+        Soft, pillowy cinnamon rolls baked fresh to order — crafted with care
+        for students and sweet tooth lovers across Athi River. 🌀
+      </p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-primary">✦ View Our Menu</a>
+        <a href="https://wa.me/254790811627?text=Thank+you+for+reaching+out,+I+will+be+with+you+shortly." target="_blank" class="btn-outline">Order on WhatsApp</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item">
+          <strong>Fresh</strong>
+          <span>Baked to Order</span>
+        </div>
+        <div class="trust-item">
+          <strong>🚚</strong>
+          <span>Delivery Available</span>
+        </div>
+        <div class="trust-item">
+          <strong>★★★★★</strong>
+          <span>Loved by Students</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-img-col">
+      <img
+        src="https://images.unsplash.com/photo-1600628421055-4d30de868b8f?w=1000&auto=format&fit=crop&q=85"
+        alt="Fresh cinnamon rolls by Kabura's Desserts"
+        loading="eager"
+      />
+      <div class="hero-card">
+        <span class="hc-icon">🌀</span>
+        <div>
+          <strong>Baked Fresh Daily</strong>
+          <small>Mon – Fri, 8am – 6pm</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-inner" id="marqueeInner">
+    <span>Cinnamon Rolls</span>
+    <span>Baked Fresh Daily</span>
+    <span>Luxury Desserts</span>
+    <span>Athi River</span>
+    <span>Made with Love</span>
+    <span>Order on WhatsApp</span>
+    <span>Delivery Available</span>
+    <span>Campus Friendly</span>
+    <!-- duplicate for seamless loop -->
+    <span>Cinnamon Rolls</span>
+    <span>Baked Fresh Daily</span>
+    <span>Luxury Desserts</span>
+    <span>Athi River</span>
+    <span>Made with Love</span>
+    <span>Order on WhatsApp</span>
+    <span>Delivery Available</span>
+    <span>Campus Friendly</span>
+  </div>
+</div>
+
+<!-- SIGNATURE / STORY -->
+<div class="signature" id="about">
+  <div class="sig-img">
+    <img
+      src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=900&auto=format&fit=crop&q=80"
+      alt="Cinnamon rolls being made"
+    />
+  </div>
+  <div class="sig-text">
+    <div class="section-eyebrow"><span>The Story</span></div>
+    <h2 class="section-title" style="font-size:2.4rem;">Baked with <em>intention,</em><br>served with warmth</h2>
+    <p>
+      Kabura's Desserts started as a passion — a love for creating indulgent treats
+      that feel like a warm hug. Every roll is handcrafted, never rushed, always made
+      fresh when you order.
+    </p>
+    <p>
+      Based in Athi River and proud to serve campus students and the wider community,
+      we believe luxury desserts shouldn't be out of reach.
+    </p>
+    <div class="sig-pills">
+      <span class="pill">🌾 Quality Ingredients</span>
+      <span class="pill">🤍 Made from Scratch</span>
+      <span class="pill">🚚 Delivery Available</span>
+    </div>
+    <div class="signature-name">Kabura ✦</div>
+  </div>
+</div>
+
+<!-- PRODUCTS / MENU -->
+<section class="products-section" id="menu">
+  <div class="section-header center">
+    <div class="section-eyebrow"><span>Our Menu</span></div>
+    <h2 class="section-title">The <em>Signature</em> Collection</h2>
+    <p class="section-sub">Fresh, handcrafted cinnamon rolls — more delicious additions coming soon.</p>
+  </div>
+
+  <div class="products-grid">
+
+    <!-- PRODUCT 1 -->
+    <div class="product-card" data-category="roll">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&auto=format&fit=crop&q=80" alt="Classic Cinnamon Roll" loading="lazy"/>
+        <span class="card-label">Signature</span>
+        <span class="card-popular">🔥 Bestseller</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">Classic Cinnamon Roll</h3>
+        <p class="card-desc">Our signature roll — soft enriched dough, swirled with brown sugar and cinnamon, finished with a glossy cream cheese glaze. The one that started it all. 🌀</p>
+        <div class="card-footer">
+          <div class="card-price">KSh 180<small>Per roll</small></div>
+          <button class="btn-whatsapp" onclick="orderWA('Classic Cinnamon Roll', 'KSh 180')">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.137.566 4.14 1.55 5.876L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.042-1.39l-.361-.214-3.741.981.999-3.648-.235-.374A9.845 9.845 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+            Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT 2 -->
+    <div class="product-card" data-category="roll">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=700&auto=format&fit=crop&q=80" alt="Nutella Cinnamon Roll" loading="lazy"/>
+        <span class="card-label">Indulgent</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">Nutella Swirl Roll</h3>
+        <p class="card-desc">All the softness of our classic, but swirled with rich Nutella and dusted with crushed hazelnuts. One bite and you'll understand. 🍫</p>
+        <div class="card-footer">
+          <div class="card-price">KSh 220<small>Per roll</small></div>
+          <button class="btn-whatsapp" onclick="orderWA('Nutella Swirl Roll', 'KSh 220')">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.137.566 4.14 1.55 5.876L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.042-1.39l-.361-.214-3.741.981.999-3.648-.235-.374A9.845 9.845 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+            Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT 3 — Box -->
+    <div class="product-card" data-category="roll">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1609428894574-68c793c6ea80?w=700&auto=format&fit=crop&q=80" alt="Box of Cinnamon Rolls" loading="lazy"/>
+        <span class="card-label">Best Value</span>
+        <span class="card-popular">💫 Popular</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">Box of 4 Rolls</h3>
+        <p class="card-desc">Perfect for sharing (or not 😉). Four freshly baked rolls — mix and match Classic and Nutella. Ideal for group orders and campus treats.</p>
+        <div class="card-footer">
+          <div class="card-price">KSh 680<small>Box of 4</small></div>
+          <button class="btn-whatsapp" onclick="orderWA('Box of 4 Cinnamon Rolls', 'KSh 680')">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.137.566 4.14 1.55 5.876L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.042-1.39l-.361-.214-3.741.981.999-3.648-.235-.374A9.845 9.845 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+            Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMING SOON -->
+    <div class="card-coming">
+      <div class="coming-icon">✨</div>
+      <h3>More Coming Soon</h3>
+      <p>New desserts are in the works. Follow along and watch this space grow — it's going to be good.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-section" id="gallery">
+  <div class="section-header center">
+    <div class="section-eyebrow"><span>Gallery</span></div>
+    <h2 class="section-title">Made to be <em>admired</em></h2>
+    <p class="section-sub">A look at what comes out of our kitchen.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item tall">
+      <img src="https://images.unsplash.com/photo-1600628421055-4d30de868b8f?w=800&auto=format&fit=crop&q=80" alt="Cinnamon rolls close up" loading="lazy"/>
+      <div class="gallery-overlay"><span>🌀</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop&q=80" alt="Classic rolls" loading="lazy"/>
+      <div class="gallery-overlay"><span>✦</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&auto=format&fit=crop&q=80" alt="Baking process" loading="lazy"/>
+      <div class="gallery-overlay"><span>🍫</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1571506165871-ee72a35bc9d4?w=600&auto=format&fit=crop&q=80" alt="Glazed rolls" loading="lazy"/>
+      <div class="gallery-overlay"><span>✨</span></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80" alt="Fresh bake" loading="lazy"/>
+      <div class="gallery-overlay"><span>🌿</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="section-header center">
+    <div class="section-eyebrow"><span>Reviews</span></div>
+    <h2 class="section-title">What people are <em>saying</em></h2>
+    <p class="section-sub">Real words from real customers who've tasted the difference.</p>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"I ordered the box of 4 for my hostel room and they were gone in minutes. Everyone kept asking where I got them. Absolutely elite."</p>
+      <div class="review-author">
+        <div class="review-avatar">🧑‍🎓</div>
+        <div><strong>Brian M.</strong><small>Campus Student, Athi River</small></div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"The Nutella roll is something else. I've tried cinnamon rolls from different places but Kabura's hits different — the dough is so soft and it's not overly sweet."</p>
+      <div class="review-author">
+        <div class="review-avatar">👩</div>
+        <div><strong>Amara N.</strong><small>Regular customer</small></div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Ordered for our group study session and it was the best decision. Fast reply on WhatsApp, delivery was on time. Will definitely order again soon!"</p>
+      <div class="review-author">
+        <div class="review-avatar">👨</div>
+        <div><strong>Kelvin O.</strong><small>Group order</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-header center" style="position:relative;z-index:1;">
+    <div class="section-eyebrow"><span>Find Us</span></div>
+    <h2 class="section-title">Let's get you your <em>order</em></h2>
+    <p class="section-sub">Reach out on WhatsApp and we'll get back to you right away.</p>
+  </div>
+  <div class="contact-inner">
+    <div>
+      <div class="contact-info">
+        <div class="c-card">
+          <div class="c-icon">📍</div>
+          <div>
+            <h4>Location</h4>
+            <p>Athi River, Machakos County<br>Kenya</p>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">📞</div>
+          <div>
+            <h4>Phone & WhatsApp</h4>
+            <p><a href="tel:+254790811627">+254 790 811 627</a><br>
+            <a href="https://wa.me/254790811627" target="_blank">Chat on WhatsApp →</a></p>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🚚</div>
+          <div>
+            <h4>Delivery</h4>
+            <p>Yes, we deliver!<br>Contact us for delivery details and charges.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hours-table" style="margin-top:20px;">
+        <div class="hours-row">
+          <span>Monday – Friday</span>
+          <span>8:00 AM – 6:00 PM</span>
+        </div>
+        <div class="hours-row">
+          <span>Saturday</span>
+          <span>By Request</span>
+        </div>
+        <div class="hours-row">
+          <span>Sunday</span>
+          <span>Closed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-cta-box">
+      <div class="cta-icon">🌀</div>
+      <h3>Ready to order?</h3>
+      <p>Send us a WhatsApp message and we'll confirm your order, discuss delivery, and get your rolls baking.</p>
+      <a href="https://wa.me/254790811627?text=Thank+you+for+reaching+out,+I+will+be+with+you+shortly." target="_blank" class="btn-wa-big">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.137.566 4.14 1.55 5.876L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.042-1.39l-.361-.214-3.741.981.999-3.648-.235-.374A9.845 9.845 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+        Order on WhatsApp
+      </a>
+      <div style="text-align:center;">
+        <span class="delivery-badge">✅ Delivery Available</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo-row">
+        <div class="lm">🌀</div>
+        <span>Kabura's Desserts</span>
+      </div>
+      <p>Handcrafted cinnamon rolls made fresh to order in Athi River, Kenya. Luxury desserts, accessible prices.</p>
+      <div class="social-row">
+        <a href="https://wa.me/254790811627" target="_blank" class="soc-link" aria-label="WhatsApp">💬</a>
+        <a href="tel:+254790811627" class="soc-link" aria-label="Call">📞</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Our Products</h5>
+      <ul>
+        <li><a href="#menu">🌀 Classic Cinnamon Roll</a></li>
+        <li><a href="#menu">🍫 Nutella Swirl Roll</a></li>
+        <li><a href="#menu">📦 Box of 4 Rolls</a></li>
+        <li><a href="#menu">✨ Coming Soon…</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Kabura's Desserts. Athi River, Kenya.</span>
+    <span>Made with ❤️ and cinnamon.</span>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a class="float-wa" href="https://wa.me/254790811627?text=Thank+you+for+reaching+out,+I+will+be+with+you+shortly." target="_blank" aria-label="Order on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.137.566 4.14 1.55 5.876L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.042-1.39l-.361-.214-3.741.981.999-3.648-.235-.374A9.845 9.845 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+</a>
+
+<!-- Back to top -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<script>
+// Navbar scroll
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// Hamburger
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => {
+  ham.classList.toggle('open');
+  mob.classList.toggle('open');
+});
+function closeMobile() {
+  ham.classList.remove('open');
+  mob.classList.remove('open');
+}
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', () => closeMobile());
+});
+
+// Scroll reveal for cards
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 100);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.product-card, .card-coming').forEach(el => observer.observe(el));
+
+// WhatsApp ordering — uses client's exact message
+function orderWA(product, price) {
+  const qty = prompt(`How many "${product}" would you like to order?`, '1') || '1';
+  const msg = encodeURIComponent(
+    `Thank you for reaching out, I will be with you shortly.\n\n` +
+    `🌀 Product: ${product}\n` +
+    `💰 Price: ${price}\n` +
+    `📦 Quantity: ${qty}`
+  );
+  window.open(`https://wa.me/254790811627?text=${msg}`, '_blank');
+}
+</script>
+</body>
+</html>
