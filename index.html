@@ -871,7 +871,8 @@ footer {
   .signature      { grid-template-columns: 1fr; }
   .sig-img        { height: 300px; }
   .gallery-grid   { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-  .gallery-item.tall { grid-row: span 1; }
+.gallery-item   { height: 260px; }
+.gallery-item.tall { grid-row: span 1; height: 180px; }
   .contact-inner  { grid-template-columns: 1fr; gap: 40px; }
   .footer-inner   { grid-template-columns: 1fr 1fr; gap: 36px; }
   .nav-links      { display: none; }
@@ -881,7 +882,8 @@ footer {
   section         { padding: 72px 5%; }
   .hero-title     { font-size: 2.5rem; }
   .hero-trust     { gap: 24px; flex-wrap: wrap; }
-  .gallery-grid   { grid-template-columns: 1fr; }
+  .gallery-grid   { grid-template-columns: 1fr 1fr;  gap: 6px;  }
+.gallery-item   { height: 180px; }
   .products-grid  { grid-template-columns: 1fr; }
   .footer-inner   { grid-template-columns: 1fr; gap: 28px; }
   .footer-bottom  { justify-content: center; text-align: center; }
@@ -1187,7 +1189,7 @@ footer {
     <!-- 9. Matcha -->
     <div class="product-card">
       <div class="card-img">
-        <img src="images/matcha.jpg" alt="Matcha Cinnamon Roll" loading="lazy"/>
+        <img src="images/matcha.JPG" alt="Matcha Cinnamon Roll" loading="lazy"/>
         <span class="card-label">Premium</span>
       </div>
       <div class="card-body">
@@ -1206,7 +1208,7 @@ footer {
     <!-- 10. Pistachio -->
     <div class="product-card">
       <div class="card-img">
-        <img src="images/pistachio.jpg" alt="Pistachio Cinnamon Roll" loading="lazy"/>
+        <img src="images/pistachio.JPG" alt="Pistachio Cinnamon Roll" loading="lazy"/>
         <span class="card-label">Premium</span>
       </div>
       <div class="card-body">
@@ -1270,7 +1272,7 @@ footer {
       <div class="gallery-overlay"><span>🍯</span></div>
     </div>
     <div class="gallery-item">
-      <img src= "images/matcha.jpg" alt="Delicious Matcha Roll" loading="lazy"/>
+      <img src= "images/matcha.JPG" alt="Delicious Matcha Roll" loading="lazy"/>
       <div class="gallery-overlay"><span>🍵</span></div>
     </div>
   </div>
